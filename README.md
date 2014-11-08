@@ -8,6 +8,7 @@ include:
 - [Marketplace Frontend](http://github.com/mozilla/fireplace)
 - [Marketplace Template](http://github.com/mozilla/marketplace-template)
 - [Marketplace Curation Tools](http://github.com/mozilla/transonic)
+- [Marketplace Communication Dashboard](http://github.com/mozilla/commbadge)
 - [Marketplace Operator Dashboard](http://github.com/mozilla/marketplace-operator-dashboard)
 - [Marketplace Statistics](http://github.com/mozilla/marketplace-stats)
 
