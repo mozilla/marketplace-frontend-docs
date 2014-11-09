@@ -6,6 +6,8 @@ Usage
 This section is about installation, command-line interface, and configuration
 of Marketplace frontend projects.
 
+.. _installation:
+
 Installation
 ------------
 
@@ -79,7 +81,7 @@ Building the Project for Production
 
 Outside of the dev environment, we bundle all of our CSS, JS, and templates.
 We use Gulp to build our projects; our Gulp code lives in
-`Marketplace Gulp <https://github.com/mozilla/marketplace-gulp`_. To run the
+`Marketplace Gulp <https://github.com/mozilla/marketplace-gulp>`_. To run the
 build system::
 
     make build
@@ -121,6 +123,28 @@ above for more details
 If you want to disable uglification and minification of JS and CSS::
 
     NO_MINIFY=1 make build
+
+
+Additional Command-Line Interface
+---------------------------------
+
+Most of our commands are brought to you by our build system and task runner,
+Gulp. And most of the useful ones have been aliased with Makefile directives
+such that we don't have to expect developers to have Gulp installed globally.
+For commands that do not have Makefile aliases, if you don't have Gulp
+installed globally, you can run Gulp through `node_modules/.bin/gulp`.
+
+You won't often need these, but here is a list of commands not mentioned above:
+
+* `make clean` - deletes generated and temporary files
+* `make lint` - lints the project's JS with JSHint
+* `gulp bower_copy` - performs the Bower copying step described in
+                      :ref:`installation`
+* `gulp require_config` - performs the `require.js` generation described in
+                          :ref:`installation`
+* `gulp css_compile` - compiles Stylus files
+* `gulp templates_build` - compiles Nunjucks templates
+* `node_modules/.bin/commonplace langpacks` - extracts locales into JS modules
 
 
 Bower and RequireJS Configuration
