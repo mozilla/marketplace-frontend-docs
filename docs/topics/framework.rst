@@ -1,4 +1,4 @@
-.. _about-framework:
+.. _framework:
 
 Marketplace Framework
 =====================
