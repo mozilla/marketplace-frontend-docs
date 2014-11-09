@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/marketplace/badge/?version=latest)](https://readthedocs.org/projects/marketplace/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/marketplace/badge/?version=latest)](https://readthedocs.org/projects/marketplace-frontend/?badge=latest)
 
 # Marketplace Frontend Docs
 
