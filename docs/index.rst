@@ -36,7 +36,7 @@ Contents
    :maxdepth: 2
 
    topics/usage.rst
-   topics/about-framework.rst
+   topics/framework.rst
    topics/adding-views.rst
    topics/templating.rst
    topics/resolving-urls.rst
