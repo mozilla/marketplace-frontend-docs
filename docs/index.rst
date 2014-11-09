@@ -25,7 +25,7 @@ Pieces that make up the framework include:
 Related Documentation
 ---------------------
 
-* `High-level Firefox Marketplace documentation <https://marketplace.readthedocs.org>`_
+* `Firefox Marketplace high-level documentation <https://marketplace.readthedocs.org>`_
 * `Firefox Marketplace API documentation <https://firefox-marketplace-api.readthedocs.org>`_
 
 
