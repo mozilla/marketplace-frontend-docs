@@ -138,9 +138,8 @@ You won't often need these, but here is a list of commands not mentioned above:
 
 * `make clean` - deletes generated and temporary files
 * `make lint` - lints the project's JS with JSHint
-* `gulp bower_copy` - performs the Bower copying step described in Installation
-* `gulp require_config` - performs the require.js generation described in
-                          Installation
+* `gulp bower_copy` - performs the Bower copying step described in :ref:`installation`
+* `gulp require_config` - performs the require.js generation described in :ref:`installation`
 * `gulp css_compile` - compiles Stylus files
 * `gulp templates_build` - compiles Nunjucks templates
 * `node_modules/.bin/commonplace langpacks` - extracts locales into JS modules
