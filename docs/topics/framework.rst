@@ -6,8 +6,8 @@ Marketplace Framework
 This section describes on a high-level the framework that we use when
 developing our frontend projects. Let's call it the Marketplace Framework. The
 Marketplace Framework is an in-house MVC framework comprised of
-`AMD modules <https://github.com/amdjs/amdjs-api/blob/master/AMD.md>` and
-`Nunjucks templates <https://http://mozilla.github.io/nunjucks/>`
+`AMD modules <https://github.com/amdjs/amdjs-api/blob/master/AMD.md>`_ and
+`Nunjucks templates <https://http://mozilla.github.io/nunjucks/>`_
 that allows us to performant single-page apps. We'll go over in-depth what the
 Marketplace Framework looks like.
 
@@ -43,7 +43,7 @@ Everything Client-Side
 Here is a simple diagram of the client-side Marketplace (codename Fireplace).
 It's pretty straightforward description of a single-page app:
 
-.. image:: img/clientside.png
+.. image:: ../img/clientside.png
 
 * Data is requested from the API
 * The client receives the data
@@ -66,7 +66,7 @@ engine something called a *defer block*, which is used from the templates. Here
 is a visual representation using for example an
 `Marketplace app detail page <https://marketplace.firefox.com/app/twitter>`_:
 
-.. image:: img/deferblocks.png
+.. image:: ../img/deferblocks.png
 
 From the templates, it might look like::
 
