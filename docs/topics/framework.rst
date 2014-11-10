@@ -84,35 +84,6 @@ you add templating markup you want displayed while the data is loading. The
 defer block is one of the magical facilities that the Marketplace Framework
 provides.
 
-Fetching and Rendering Data from RESTful APIs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-While an asynchronous request to an API endpoint is being made, we generally
-want to show something to the user in the process, like a spinner. And when
-the data comes in, we want to replace that *placeholder* with rendered
-markup. To do so, the Marketplace Frontend implements in the page rendering
-engine something called a *defer block*, which is used from the templates. Here
-is a visual representation using for example an
-`Marketplace app detail page <https://marketplace.firefox.com/app/twitter>`_:
-
-.. image:: ../img/deferblocks.png
-
-From the templates, it might look like::
-
-    {% defer (url='https://marketplace.firefox.com/api/v2/app/twitter') %}
-      <h1 class="app-name">{{ this.name }}</h1>
-    {% placeholder %}
-      <p>Loading app data...</p>
-      <div class="spinner"></div>
-    {% end %}
-
-Each defer block is a request to an API endpoint. In the defer block
-*signature*, you pass in a URL. In the defer block body, you add the templating
-markup you want displayed once the data comes in. In the *placeholder block*,
-you add templating markup you want displayed while the data is loading. The
-defer block is one of the magical facilities that the Marketplace Framework
-provides.
-
 Caching
 ~~~~~~~
 
