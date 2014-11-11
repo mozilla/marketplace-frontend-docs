@@ -43,5 +43,5 @@ Contents
    topics/making-requests.rst
    topics/caching-data.rst
    topics/misc-modules.rst
-   topics/tests.rst
+   topics/testing.rst
    topics/internals.rst
