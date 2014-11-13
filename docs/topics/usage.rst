@@ -18,7 +18,8 @@ simple. For this example, we'll check out
 `Fireplace <https://github.com/mozilla/fireplace>`_::
 
     git clone git@github.com:mozilla/fireplace
-    make init
+    npm install
+    make install
     make serve
 
 This will:
@@ -35,13 +36,13 @@ This will:
 Pulling in Updates
 ------------------
 
-When fetching updates (e.g., `git pull`), due to often-updating Bower and Node
-dependencies, you will often have to run::
+When fetching updates (e.g., after `git pull`), due to often-updating Bower and
+Node dependencies, you will often have to run::
 
-    make update
+    make install
 
-This will also do every part of the installation step above, except for
-generating a local settings file (as to not overwrite your current one).
+This will also do every part of the installation step above (except generate
+a local file since that has already been done).
 
 
 About the Webserver
