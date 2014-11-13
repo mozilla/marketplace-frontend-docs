@@ -1,9 +1,15 @@
 [![Documentation Status](https://readthedocs.org/projects/marketplace/badge/?version=latest)](https://readthedocs.org/projects/marketplace-frontend/?badge=latest)
 
-# Marketplace Frontend Docs
+Developer documentation for Firefox Marketplace frontend projects. Hosted at
+[marketplace-frontend.readthedocs.org](https://marketplace-frontend.readthedocs.org).
 
-Developer documentation for Firefox Marketplace frontend projects. Projects
-include:
+Other Marketplace documentation repositories include:
+
+- [Marketplace high-level documentation](https://github.com/mozilla/marketplace-docs).
+- [Marketplace API documentation](https://github.com/mozilla/zamboni/tree/docs/api).
+
+
+Marketplace frontend projects include:
 
 - [Marketplace Frontend](http://github.com/mozilla/fireplace)
 - [Marketplace Template](http://github.com/mozilla/marketplace-template)
@@ -11,9 +17,6 @@ include:
 - [Marketplace Communication Dashboard](http://github.com/mozilla/commbadge)
 - [Marketplace Operator Dashboard](http://github.com/mozilla/marketplace-operator-dashboard)
 - [Marketplace Statistics](http://github.com/mozilla/marketplace-stats)
-
-See also the
-[high-level developer documentation for the Firefox Marketplace](https://marketplace.readthedocs.org/).
 
 
 # Building the Documentation
