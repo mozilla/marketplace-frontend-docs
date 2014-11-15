@@ -9,7 +9,7 @@ of Marketplace frontend projects.
 .. _installation:
 
 Installation
-------------
+~~~~~~~~~~~~
 
 You will need Node and NPM installed.
 
@@ -34,7 +34,7 @@ This will:
 
 
 Pulling in Updates
-------------------
+~~~~~~~~~~~~~~~~~~
 
 When fetching updates (e.g., after `git pull`), due to often-updating Bower and
 Node dependencies, you will often have to run::
@@ -46,7 +46,7 @@ a local file since that has already been done).
 
 
 About the Webserver
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 The webserver launched by `make serve` will watch the filesystem for changes
 and recompile anything if necessary. Here is what the webserver watches for:
@@ -77,7 +77,7 @@ CSS stylesheets live without a page refresh. To disable LiveReload::
     NO_LIVERELOAD=1 make serve
 
 Generated index.html
-~~~~~~~~~~~~~~~~~~~~
+____________________
 
 Note that `src/index.html` is a generated file. This allows us to:
 
@@ -89,7 +89,7 @@ Note that `src/index.html` is a generated file. This allows us to:
 
 
 Building the Project for Production
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Outside of the dev environment, we bundle all of our CSS, JS, and templates.
 We use Gulp to build our projects; our Gulp code lives in
@@ -144,7 +144,7 @@ If you want to disable uglification and minification of JS and CSS::
 
 
 Additional Command-Line Interface
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Most of our commands are brought to you by our build system and task runner,
 Gulp. And most of the useful ones have been aliased with Makefile directives
@@ -164,7 +164,7 @@ You won't often need these, but here is a list of commands not mentioned above:
 
 
 Bower and RequireJS Configuration
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Above we mentioned the installation and update steps will:
 
@@ -185,7 +185,7 @@ There are two exported configuration objects, one for Bower and one for
 RequireJS.
 
 Bower Configuration
-~~~~~~~~~~~~~~~~~~~
+___________________
 
 We use Gulp to copy files from `bower_components` into our project source.
 This is standard. Bower recommends not serving up the `bower_components`
@@ -201,7 +201,7 @@ example may look like::
     }
 
 RequireJS Configuration
-~~~~~~~~~~~~~~~~~~~~~~~
+_______________________
 
 The keys of the object specifies the source path of the file within
 `bower_components`. The values of the object specify the destination path. The
@@ -225,7 +225,7 @@ Our project runs on AMD so understanding `RequireJS configuration
 <http://requirejs.org/docs/api.html#config>`_ is very helpful.
 
 Extending the Base Configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+________________________________
 
 The base Commonplace configuration can be extended within frontend projects
 in `config.js`. It will become straightforward once you check out the file. We

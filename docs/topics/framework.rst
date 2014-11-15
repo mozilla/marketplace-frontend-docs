@@ -8,8 +8,8 @@ developing our frontend projects. Let's call it the Marketplace Framework. The
 Marketplace Framework is an in-house MVC framework comprised of
 `AMD modules <https://github.com/amdjs/amdjs-api/blob/master/AMD.md>`_ and
 `Nunjucks templates <https://http://mozilla.github.io/nunjucks/>`_
-that allows us to performant single-page apps. We'll go over in-depth what the
-Marketplace Framework looks like.
+that allows us build to performant single-page apps. We'll go over in-depth
+what the Marketplace Framework looks like.
 
 If you are curious why we have our own framework, and not use something like
 Backbone or Angular? Simply put for Backbone, it had a lot stuff we didn't need
@@ -34,6 +34,7 @@ goal:
 * Use RESTful APIs for everything for asynchronous and deferred loading
 * Always show something (throbbers) to the user while data is being fetched
 * Cache as much as possible
+* Modular components and reusable code
 * Pave the way for the Marketplace to become a
   `packaged app <https://developer.mozilla.org/Marketplace/Options/Packaged_apps>`_.
 
@@ -148,3 +149,26 @@ module if the model cache hasn't been primed). The model cache might look like::
             }
         }
     }
+
+
+Modular Components and Reusable Code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Marketplace Framework is split into many different repositories, all hosted
+on an appropriate package manager (NPM or Bower). These components are
+reusable, as in any projects can consume them. And they are modular, such that
+they can be updated one piece at a time, and projects and pull in those
+updates.
+
+With stuff separately hosted in NPM and Bower, when a component is updated and
+a frontend project wishes to pull in the updates, all that needs to be done is
+to bump the version number in the `package.json` or `bower.json`.
+
+For example, we have a component, `Marketplace Core Modules
+<https://github.com/mozilla/marketplace-core-modules>`_.  Whenever a project
+wishes to update these modules, they push an update to the repository and tag a
+version. Then other projects are able to enjoy the benefits of the updated
+modules by bumping their ```bower.json``` to the updated tag.
+
+If you want a complete listing of all the modules and components, head to
+the `index page of this documentation <https://http://marketplace-frontend.readthedocs.org/en/latest/index.html>`_.
