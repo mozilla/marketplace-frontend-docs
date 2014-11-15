@@ -37,11 +37,11 @@ Contents
 
    topics/usage.rst
    topics/framework.rst
-   topics/adding-views.rst
+   topics/developing-components.rst
+   topics/views.rst
    topics/templating.rst
-   topics/resolving-urls.rst
-   topics/making-requests.rst
-   topics/caching-data.rst
-   topics/misc-modules.rst
+   topics/routing.rst
+   topics/requests.rst
+   topics/caching.rst
+   topics/module-api.rst
    topics/testing.rst
-   topics/internals.rst
