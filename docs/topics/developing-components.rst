@@ -1,13 +1,13 @@
-.. _developing-on-components:
-
-Developing on Components
-========================
-
-This section is about developing on Marketplace Framework components, such as
-`Marketplace Core Modules <https://github.com/mozilla/marketplace-core-modules>`_.
+.. _developing-components:
 
 Developing Components
-~~~~~~~~~~~~~~~~~~~~~
+=====================
+
+This section is about developing on the shared Marketplace Framework components, such as
+`Marketplace Core Modules <https://github.com/mozilla/marketplace-core-modules>`_.
+
+Development and Testing Workflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For convenience, you can `git clone` components straight into the source of
 your frontend project to where it would normally be copied to. That way, you
