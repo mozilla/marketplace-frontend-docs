@@ -76,6 +76,17 @@ CSS stylesheets live without a page refresh. To disable LiveReload::
 
     NO_LIVERELOAD=1 make serve
 
+Generated index.html
+~~~~~~~~~~~~~~~~~~~~
+
+Note that `src/index.html` is a generated file. This allows us to:
+
+- Easily serve different templates when we want by copying other templates to
+  `src/index.html` (such as when specifying `TEMPLATE` like above)
+- Inject a LiveReload script (with the correct ports) into the body
+- Have a single dev.html template that can switch back and forth between
+  serving development assets and compiled assets
+
 
 Building the Project for Production
 -----------------------------------
@@ -89,14 +100,20 @@ build system::
 
 About the CSS builds:
 
-* CSS will be minified and concatenated into `src/media/css/include.css`
+* CSS listed in `src/dev.html` will be minified and concatenated into
+  `src/media/css/include.css` in the order that they are listed in
+  `src/dev.html`
 * Extra CSS bundles can be configured in `config.js`, such as we do for
-  `src/media/css/splash.css`
+  `src/media/css/splash.css`. The files used to create the bundle and the
+  bundle itself will not be minified into `src/media/css/include.css`
 
 About the JS builds:
 
 * The JS will be bundled into `src/media/js/include.js`
 * JS is run through a `RequireJS optimizer <http://requirejs.org/docs/optimization.html>`_
+* The RequireJS optimizer will build a dependency tree by parsing our defines
+  and requires to only include modules that are used. Although, it is
+  configurable to include and exclude what we want.
 * The RequireJS configuration used for local development is also passed in to
   the our RequireJS optimizer
 * `almond <http://github.com/jrburke/almond>`_, a lightweight AMD loader, will
@@ -105,7 +122,7 @@ About the JS builds:
 
 About template builds:
 
-* We use Nunjucks to compile our templates into `src/templates.js`
+* We use Nunjucks to compile all our templates into `src/templates.js`
 * We have Node modules that monkeypatch the official Nunjucks compiler to
   perform various (non-upstream compatible) optimizations to reduce the size
   of our templates bundle
@@ -113,7 +130,7 @@ About template builds:
 Other things that will be generated:
 
 * `src/media/build_id.txt` contains the timestamp during that build, which is
-  used as a cachebusting query string when we serve our assets in production
+  used to cachebust our assets in production
 * `src/media/imgurls.txt` contains image URLs found in our CSS stylesheets,
   which is used to generate an appcache manifest on the server
 
@@ -165,13 +182,26 @@ modules that we know ships with every frontend project (e.g.,
 marketplace-core-modules).
 
 There are two exported configuration objects, one for Bower and one for
-RequireJS. The Bower configuration, `require('commonplace').bowerConfig`, for
+RequireJS.
+
+Bower Configuration
+~~~~~~~~~~~~~~~~~~~
+
+We use Gulp to copy files from `bower_components` into our project source.
+This is standard. Bower recommends not serving up the `bower_components`
+directory statically for security reasons, and using a build tool such as
+Gulp or Bower to process components.
+
+The Bower configuration, `require('commonplace').bowerConfig`, for
 example may look like::
 
     {
         'jquery/jquery.js': 'src/media/js/lib/',
         'marketplace-frontend/src/templates/feed.html': 'src/templates'
     }
+
+RequireJS Configuration
+~~~~~~~~~~~~~~~~~~~~~~~
 
 The keys of the object specifies the source path of the file within
 `bower_components`. The values of the object specify the destination path. The
@@ -193,6 +223,9 @@ This will be used to generate a `require.js` file that contains an injected
 `require.config`. It is also used during our RequireJS optimization build step.
 Our project runs on AMD so understanding `RequireJS configuration
 <http://requirejs.org/docs/api.html#config>`_ is very helpful.
+
+Extending the Base Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The base Commonplace configuration can be extended within frontend projects
 in `config.js`. It will become straightforward once you check out the file. We
