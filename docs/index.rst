@@ -5,6 +5,15 @@ In-depth developer documentation for `Firefox Marketplace`_. frontend projects.
 
 .. _`Firefox Marketplace`: https://marketplace.firefox.com/
 
+Related Documentation
+---------------------
+
+* `Firefox Marketplace high-level documentation <https://marketplace.readthedocs.org>`_
+* `Firefox Marketplace API documentation <https://firefox-marketplace-api.readthedocs.org>`_
+
+Frontend Projects and Components
+--------------------------------
+
 Marketplace frontend projects all share a common framework. Current projects
 include:
 
@@ -20,14 +29,7 @@ Pieces that make up the framework include:
 * `Marketplace Core Modules <https://github.com/mozilla/marketplace-core-modules>`_
 * `Marketplace Gulp <https://github.com/mozilla/marketplace-gulp>`_
 * `Marketplace Node Modules <https://github.com/mozilla/commonplace>`_
-
-
-Related Documentation
----------------------
-
-* `Firefox Marketplace high-level documentation <https://marketplace.readthedocs.org>`_
-* `Firefox Marketplace API documentation <https://firefox-marketplace-api.readthedocs.org>`_
-
+* `Marketplace API Mock <https://github.com/mozilla/marketplace-api-mock>`_
 
 Contents
 --------
@@ -37,10 +39,9 @@ Contents
 
    topics/usage.rst
    topics/framework.rst
+   topics/page-building.rst
    topics/developing-components.rst
-   topics/views.rst
    topics/templating.rst
-   topics/routing.rst
    topics/requests.rst
    topics/caching.rst
    topics/module-api.rst
