@@ -87,3 +87,14 @@ To **consume** the updated component from a frontend project:
 - Run ``make install`` to update the project's node modules
 - Commit and push the ``package.json`` to deploy the updated module for the
   project
+
+
+Guidelines
+~~~~~~~~~~
+
+When updating a module:
+
+- Bump the ``bower.json`` or ``package.json`` in the same commit
+- Prepend the commit message with the version (e.g., *v1.5.3 updated logs*)
+
+Then proceed as described above.
