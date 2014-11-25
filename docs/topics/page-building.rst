@@ -77,12 +77,66 @@ There are some quirks with regular expressions in routes:
 Views
 ~~~~~
 
-.. _builder-object:
+Each view is represented by its own module in the ``src/media/js/views``
+directory. Here's an example view:
 
-Builder Object
-~~~~~~~~~~~~~~
+.. code-block:: javascript
+
+    define('views/myview', ['l10n', 'z'], function(l10n, z) {
+        // -- MODULE LEVEL --.
+        var gettext = l10n.gettext;
+
+        z.page.on('click', 'button', function() {
+            console.log('Put your delegated event handlers on this level.');
+        });
+
+        return function(builder) {
+            // -- BUILDER LEVEL --.
+            builder.z('title', gettext('My View Page Title'));
+            builder.z('type', 'leaf');
+
+            builder.start('some_template.html', {
+                someContextVar: true
+            });
+        };
+    });
+
+At the the module level, the view usually consists of mostly delegated event
+handlers. At the *Builder level*, inside the function returned by the view,
+consists of code that handles the actual page rendering using the injected
+*Builder object*.
+
+The Builder Object
+------------------
+
+The function returned by the view is invoked by
+``marketplace-core-modules/views.js`` after it matches the respective route.
+``views.js`` will pass in a Builder object, which is defined in
+``marketplace-core-modules/builder.js``. The Builder object is the pure meat
+behind page rendering. It handles Nunjucks template rendering, defer block
+injections, pagination, requests, callbacks, and more, tying everything
+together.
+
+Guidelines
+----------
+
+Here are some important guidelines around building views:
+
+- You should **not** perform **any** delegated event bindings on elements that
+  are not a part of the page
+  (e.g., ``z.page.on('click', '.element-from-another-page'...)``).
+- And all delegated event bindings on non-page elements should be bound at the
+  module level. This prevents *listener leaks*.
+- Expensive lookups, queries, and data structures should be done **outside**
+  the Builder level. This ensures that any value is computed only once.
+- Delegated events should be used whenever possible, and state should be
+  preserved on affected elements (e.g., via data attributes) rather than within
+  variables.
+- State variables should never exist at the module level unless it represents
+  a persistent state.
+
 
 .. _defer-block:
 
-Defer Block
-~~~~~~~~~~~
+Defer Blocks in Templating
+~~~~~~~~~~~~~~~~~~~~~~~~~~
