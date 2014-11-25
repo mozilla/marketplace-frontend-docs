@@ -3,7 +3,7 @@ Testing
 
 Marketplace frontend projects have both unit tests and end-to-end tests. These
 tests help catch regressions, validate user flow, and add confidence the
-codebase.
+codebase. When adding feature, try to look to cover it with test.
 
 Our tests expect that you use the
 `Marketplace API Mock <https://github.com/mozilla/marketplace-api-mock>`_. You
@@ -12,6 +12,9 @@ can do so by setting in your local settings::
     api_url: 'https://flue.paas.allizom.org',
     media_url: 'https://flue.paas.allizom.org'
 
+When modifying a module that has defined input and output, write a unit test.
+When modifying the UI or something that affects multiple pages and URLs, then
+write an end-to-end test.
 
 Unit Tests
 ~~~~~~~~~~
@@ -26,7 +29,7 @@ To run unit tests, simply navigate to::
     http://localhost:xxxx/tests
 
 where xxxx is the port the project is being served from with ``make serve``.
-You *could* also run it on the command-line with ``node_modules/.bin/casperjs
+You *could* also run it on the command line with ``node_modules/.bin/casperjs
 test tests/ui/unittests.js``, but it's not very descriptive in telling what
 passes and what fails.
 
@@ -55,7 +58,9 @@ tests pass in continuous integration.
 Writing a Unit Test
 -------------------
 
-A basic unit test may look like::
+A basic unit test may look like:
+
+.. code-block:: javascript
 
     test('someModule.someFunction', function(done, fail) {
         mock('someModule', {
@@ -69,7 +74,7 @@ A basic unit test may look like::
         }, fail);
     });
 
-Things to note:
+Important things to note:
 
 - ``test`` is a function defined in ``marketplace-core-modules/views/tests.js``
   as ``window.test``. It takes the name of the test. Then it injects a done and
@@ -82,163 +87,129 @@ Things to note:
   done using RequireJS contexts. Each time mock is called, a unique RequireJS
   context is generated that uses the ``map`` config of the RequireJS config. It
   then stubs (not extends) the modules with what you pass in as the mock.
+- The function that comes after the mock is injected with the module being
+  tested. You can make assertions and raise failures in this function. At the
+  end, make sure to call the ``done`` callback.
+- The last argument is the ``fail`` callback
+
+Check out the ``assert.js`` module to see the testing API.
 
 
 End-to-End Tests
 ~~~~~~~~~~~~~~~~
 
-The best way to write a test for Casper is to take a test from an existing project
-and use that as a template.
+We use `CasperJS <http://casperjs.readthedocs.org/en/latest/>`_
+(*v1.1.0-beta3*) to write ouj end-to-end, or integration, tests. These tests
+live in the ``tests`` directory. This directory comprises of:
 
-Taking a Fireplace test as an example let's build up a test file.
+- ``captures`` - contains screenshots taken whenever a test fails
+- ``helpers.js`` - helps power our tests on top of casperjs. contains various
+  assertion facilities, utilities, and sets up necessary callbacks.
+- ``settings_travis.js`` - contains test settings and is copied into the
+  project directory during Travis tests (in .travis.yml)
+- ``ui`` - holds the actual tests
 
-First we add the helpers script. This contains utility functions and helpful
-wrappers to casper functionality just so we don't have to repeat lots of boilerplate
-code all over the place.
+CasperJS spins up PhantomJS, a headless browser, and runs the tests. The tests
+*usually* consist of telling CasperJS what to click and then asserting that a
+selector is visible. An example test:
 
 .. code-block:: javascript
 
   var helpers = require('../helpers');
+  helpers.startCasper({path: '/some/path'});
 
-This next line starts casper. If you pass in an object and set the path, this will modify
-where casper starts. In this case this will start us off at the homepage of our app.
-
-.. code-block:: javascript
-
-  helpers.startCasper();
-
-Here's an alternative that will send casper to '/app/foo'
-
-.. code-block:: javascript
-
-  helpers.startCasper({path: '/app/foo'});
-
-Now let's look at the most important block. We generally use this object-based
-syntax for casper.test.begin.
-
-This object contains a test method with our test code, along with a setUp and tearDown
-method. Thes last two are optional if you don't need them you can exclude them.
-
-.. code-block:: javascript
-
-  casper.test.begin('Test system date dialogue', {
-
+  casper.test.begin('Test Some Selector', {
       setUp: function() {
-        // Setup here
+        // Setup ran before the test.
       },
 
       tearDown: function() {
-        // Teardown here
+        // Teardown ran after the test.
       },
 
       test: function(test) {
-
           casper.waitForSelector('#splash-overlay.hide', function() {
-              // Run an assertion here e.g:
-              test.assertVisible('.date-error', 'Check date error message is shown');
+              // Run an assertion.
+              test.assertVisible('.some-selector',
+                                 'Check that Some Selector is visible');
+              casper.click('.go-to-some-page');
+          });
+
+          casper.waitForSelector('.some-page', function() {
+              test.assertVisible('.some-page',
+                                 'Check navigated to Some Page');
           });
 
           casper.run(function() {
-              test.done();
+              test.done();  // Required for test to run!
           });
       },
   });
 
-The last block that contains `test.done()` is very important. Without this your test won't run.
+We require ``helpers``, which contains some boilerplate such as for
+initializing CasperJS. We pass a path to ``startCasper`` which the page
+CasperJS will tell PhantomJS to initially load. We begin a test, named *Test
+Some Selector*, which takes an object. The ``test`` function is injected with
+the `CasperJS test module
+<http://docs.casperjs.org/en/latest/modules/tester.html>`_ which contains
+assertion facilities and callbacks. Then we run the test, but make sure that
+the ``test.done()`` callback is invoked at the end.
 
-Testing Tips
-~~~~~~~~~~~~
+Check out the CasperJS docs and `our existing Fireplace tests
+<https://github.com/mozilla/fireplace/tree/master/tests/ui>`_ for clues on how
+to write end-to-end tests for our frontend projects.
 
-When to write a test
---------------------
+Executing Code Within the Browser Environment
+----------------------------------------------
 
-If you're adding a feature to a project that support front-end tests (Fireplace/Spartacus etc) then
-always look to cover your feature with a test.
-
-If you're fixing a bug then this can be a great chance to start with a failing test first,
-and then work on the fix until the test passes. This will also cover you should something
-cause this bug to re-occur in the future.
-
-When to write a unitest vs a casperjs flow test
------------------------------------------------
-
-If you're adding something that has defined input/output or can be tested at a low level easily
-then a unittest can be the best place to test it. If your code is more involved e.g. it does UI
-changes or affects multiple pages/URLS then a casper test is going to be the best approach.
-
-
-Using `waitFor` to wait for conditions
---------------------------------------
-
-`waitFor <http://docs.casperjs.org/en/latest/modules/casper.html#waitfor>`_ methods are very useful for making casper wait until a condition is met before trying
-to test something. Generally you should never need to use a timeout or `casper.wait`
-
-Here's a list of some of the commonly used `waitFor` methods we use:
-
-* `waitForSelector <http://docs.casperjs.org/en/latest/modules/casper.html#waitforselector>`_ - waits for a selector to exist in the DOM.
-* `waitWhileVisible <http://docs.casperjs.org/en/latest/modules/casper.html#waitwhilevisible>`_ - used to wait until a selector dissappears.
-* `waitUntilVisible <http://docs.casperjs.org/en/latest/modules/casper.html#waituntilvisible>`_ - use to wait until a selector is visible.
-* `waitForUrl <http://docs.casperjs.org/en/latest/modules/casper.html#waitforurl>`_ - Wait until casper has moved to the desired or matching url.
-
-Most things are catered for. Always check the API docs to see if what you want is there.
-
-If it's not then you can always use `waitFor <http://docs.casperjs.org/en/latest/modules/casper.html#waitfor>`_ and define your own function that returns
-true when your custom condition is met.
-
-If you use a custom condition a lot then consider adding it to `helpers.js`
-
-
-Avoid testing for specific strings
-----------------------------------
-
-We do it in a few places but generally it's good to try and avoid string checking
-as it's likely to break when strings are updated.
-
-
-Check casper's API for existing methods that will do what you want
-
-
-There's lots and lots of stuff in the API already. Always take a look before
-rolling your own function.
-
-`Casper Test module <http://docs.casperjs.org/en/latest/modules/tester.html>`_
-
-
-Understand the different environments
--------------------------------------
-
-The code in tests doesn't run in the browser environment. When you use casper's API
-it's talking to Phantom (or a.n.other backend).
-
-If you want to run something on the browser environment you can use `casper.evaluate`
-which then runs the code on the client.
-
-Here's a simple example:
+The code within the tests themselves executes in Node runtime, not PhantomJS
+browser runtime. CasperJS handles the communication to the PhantomJS browser.
+If you wish to run something within browser environment, you can use
+``casper.evaluate``:
 
 .. code-block:: javascript
 
-    casper.evaluate(function(arg) {
-        console.log(arg);
-    }, 'test');
+    var returnValue = casper.evaluate(function() {
+        window.querySelector('.some-selector').setAttribute('data-value', value);
+        return window.querySelector('.some-selector').getAttribute(value);
+    });
 
-See the casper docs for more info.
+``casper.evaluate`` runs synchronously and is allowed to return primitive
+values up to the Node runtime.
 
+Using waitFor's
+---------------
 
-setUp not running early enough
-------------------------------
+`waitFor <http://docs.casperjs.org/en/latest/modules/casper.html#waitfor>`_
+methods are useful for making CasperJS wait until a condition is met before
+running assertions. Generally, timeouts should be avoided with `casper.wait`.
 
-Sometimes we need to do things in setUp to modify a page to test specific functionality.
-One problem that you might find is that setUp fires too early and changes made there don't work
-To work around this you can look for the `page.initialized` event.
+For example, on many tests, we tell CasperJS to ``waitForSelector`` on
+``#splash-overlay.hide`` because the splash screen being hidden is one of the
+ways we can tell that the page has sufficiently loaded. We can also do this
+when we click around with ``casper.click``, and tell CasperJS to wait until a
+selector we expect to be visible is loaded.
 
-Here's an example:
+Here is a list of commonly used `waitFor` methods:
 
-.. code-block:: javascript
+* `waitForSelector <http://docs.casperjs.org/en/latest/modules/casper.html#waitforselector>`_ -
+   wait for selector to exist in the DOM
+* `waitWhileVisible <http://docs.casperjs.org/en/latest/modules/casper.html#waitwhilevisible>`_ -
+   wait for selector to disappear
+* `waitUntilVisible <http://docs.casperjs.org/en/latest/modules/casper.html#waituntilvisible>`_ -
+   wait for selector to appear
+* `waitForUrl <http://docs.casperjs.org/en/latest/modules/casper.html#waitforurl>`_ -
+   wait until casper has moved to the desired or matching url
 
-    setUp: function() {
-        casper.once('page.initialized', function() {
-            casper.evaluate(function() {
-              // Evalaute some JS in the page.
-            });
-        });
-    },
+Or you can make a custom
+`waitFor <http://docs.casperjs.org/en/latest/modules/casper.html#waitfor>`_ by
+defining a function that returns true when a custom condition is met.
+
+Tips and Guidelines
+-------------------
+
+- If you write something that is reusable, consider adding it to ``helpers.js``
+- Try to avoid specific string checking as the test may break if strings
+  are updated
+- If ``setUp`` is firing too early, then try running the code within
+  ``casper.once('page.initialized', function() {...)``.
