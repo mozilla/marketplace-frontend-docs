@@ -56,6 +56,8 @@ endpoint since the page rendering happens client-side. When we navigate to an
 already-visited page, the request goes to the cache. Less requests, better
 performance.
 
+.. _fetching-restful-apis:
+
 Fetching and Rendering Data from RESTful APIs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

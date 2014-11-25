@@ -183,8 +183,64 @@ For more details and functionality, below describes the Builder object's API:
                              from the defer block's API endpoint
     :rtype: the Builder object
 
+.. function:: builder.results
+
+    An object containing results from API responses triggered in defer blocks.
+    The results will be keyed by the ID of the defer blocks.
+
+.. function:: builder.terminate()
+
+    While the Builder object is often not accessible, if a reference to it
+    is available and the current viewport is changing pages, calling
+    builder.abort will terminate all outstanding HTTP requests and begin
+    cleanup. This should never be called from a builder.onload handler.
+
+    :rtype: the Builder object
+
 
 .. _defer-block:
 
-Defer Blocks in Templating
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Defer Blocks
+~~~~~~~~~~~~
+
+In the :ref:`framework` section about :ref:`fetching-restful-apis`, we
+introduced **defer blocks** as a page rendering component, invoked from the
+templates, that asynchronously fetches data from APIs and renders a template
+fragment once finished. We *heavily* recommend reading that section if you have
+not already. As we described the Builder as the meat of the framework, defer
+blocks are the magic.
+
+.. function:: {% defer (api_url[, id[, pluck[, as[, key[, paginate]]]]]) %}
+
+    Fetches data from api_url, renders the template in the body, and injects
+    it into the page.
+
+    :param api_url: the API endpoint URL. Use the ``api`` helper and an API
+                    route name to reverse-resolve a URL
+    :param id: ID of the defer block, used to store API results and fire
+               callbacks on the builder object
+    :param pluck: extracts a value from the returned response and reassigns the
+                  value to ``this``. Often used to facilitate model caching.
+                  The original value of ``this`` is preserved in the variable
+                  ``response``.
+    :param as: determines which model to cache ``this`` into
+    :param key: pairs with ``as``, determines which field of ``this`` to use
+                as the model key
+
+A basic defer block looks like::
+
+    {% defer (url=api('foo')) %}
+      <h1 class="app-name">{{ this.name }}</h1>
+    {% placeholder %}
+      <div class="spinner"></div>
+    {% end %}
+
+In this example, the defer block asynchronously loads the content at
+api('foo').  While waiting for the response, we can show something in the
+meantime with the ``placeholder``. Once it has loaded, the content within the
+defer block is injected into the page's template (by replacing the
+placeholder). ``this`` will then contain the API response returned form the
+server.
+
+If two defer blocks use the same API endpoint, the request will only be made
+once in the background.
