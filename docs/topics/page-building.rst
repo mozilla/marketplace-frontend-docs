@@ -12,20 +12,15 @@ meat of the Marketplace Framework.
 Routing
 ~~~~~~~
 
-All pages have a route, or URL, that is used by the framework to resolve the
-appropriate view:
-
-- On page load or click of an anchor tag, ``navigation.js`` calls ``views.js``
-- ``views.js`` looks up the appropriate view for the current window path
-- ``views.js`` loops over the list of routes built by the project's ``routes.js``
-- When ``views.js`` finds a match, it returns the view module that matches the path
-
-Path-to-view mappings are defined within ``src/media/js/routes.js``. For
-example, ``routes.js`` may look like:
+All pages should have a route that which is used to resolve the appropriate
+view. To make a page accessible, you must create a route in the project's
+``src/media/js/routes.js``. A route is represented by an object in the list of
+routes. The ``routes.js`` file may look like:
 
 .. code-block:: javascript
 
     function() {
+        // The list of routes.
         var routes = window.routes = [
             {'pattern': '^$', 'view_name': 'homepage'},
             {'pattern': '^/app/([^/<>"\']+)/?$', 'view_name': 'app'},
@@ -44,28 +39,38 @@ example, ``routes.js`` may look like:
         });
     }();
 
-The routes mapping is created outside of the define call. It is a list of
-objects containing a *pattern* and a *view_name*:
+Each route object should match the following prototype:
 
-- *pattern* -a regular expression used to match against the window pathname
-- *view_name* - name of the view module to resolve to. The view module should
-  live in ``src/media/js/views`` and the original name should be prefixed with
-  ``views/``. But the prefix should be left out of the *view_name* as it is
-  automatically prepended in the define call.
+.. code-block:: javascript
 
-In the define call, the list of routes is looped over and actual view modules
-to are attached to the route objects. Note that the define call **must** list
-every view's module name as a dependency as seen above.
+    {
+        'pattern': '<regexp>',  // Regular expression to match current path.
+        'view_name': '<view name>'  // Name of view module w/o 'views/' prefix.
+    }
 
-Adding a Route
---------------
+In the define call, the list of routes is looped over and the respective view
+modules are attached to the route objects. Note that the define call **must**
+list every view's module name as a dependency as seen above.
 
-To add a route:
+When navigating or loading a page, ``marketplace-core-modules/views.js`` will
+loop over all the routes in sequence and try to match it with the current path.
+If no match is found, it will just redirect the browser to the navigating URL.
+When a pattern is matched, the view (which returns a builder object as we will
+see later) will be invoked to build the page.
 
-- Add a route object to the list of ``routes`` at the top.
-- The route object should contain a *pattern* regex to match its respective window pathname
-- The route object should contain a *view_name* to resolve to
-- Add the full view name to the dependency list of ``routes``'s define call
+Regular Expressions
+-------------------
+
+There are some quirks with regular expressions in routes:
+
+- **non-matching groups may not be used** - cannot use a group simply to
+  tell the parser that something is optional. Groups are only for parameters
+  during matching the current path and reverse URL resolving.
+- **? may not be used to perform greedy matching** - the optional operator
+  can only be performed on static, non-repeating components.
+- **multiple optional groups are not allowed** - optional groups are not evaluated
+  greedily. Use multiple routes instead.
+
 
 .. _views:
 
