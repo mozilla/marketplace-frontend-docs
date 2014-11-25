@@ -1,7 +1,7 @@
 Firefox Marketplace Frontend Documentation
 ==========================================
 
-In-depth developer documentation for `Firefox Marketplace`_. frontend projects.
+In-depth developer documentation for `Firefox Marketplace`_ frontend projects.
 
 .. _`Firefox Marketplace`: https://marketplace.firefox.com/
 

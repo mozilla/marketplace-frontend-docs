@@ -72,10 +72,10 @@ There are some quirks with regular expressions in routes:
   greedily. Use multiple routes instead.
 
 
-.. _views:
+.. _building-views:
 
-Views
-~~~~~
+Building Views
+~~~~~~~~~~~~~~
 
 Each view is represented by its own module in the ``src/media/js/views``
 directory. Here's an example view:
@@ -106,17 +106,6 @@ handlers. At the *Builder level*, inside the function returned by the view,
 consists of code that handles the actual page rendering using the injected
 *Builder object*.
 
-The Builder Object
-------------------
-
-The function returned by the view is invoked by
-``marketplace-core-modules/views.js`` after it matches the respective route.
-``views.js`` will pass in a Builder object, which is defined in
-``marketplace-core-modules/builder.js``. The Builder object is the pure meat
-behind page rendering. It handles Nunjucks template rendering, defer block
-injections, pagination, requests, callbacks, and more, tying everything
-together.
-
 Guidelines
 ----------
 
@@ -134,6 +123,66 @@ Here are some important guidelines around building views:
   variables.
 - State variables should never exist at the module level unless it represents
   a persistent state.
+
+The Builder Object
+------------------
+
+A Builder object is injected into the function returned by the view when.
+``marketplace-core-modules/views.js`` matches the respective route and invokes
+the view. The Builder object is defined in ``marketplace-core-modules/builder.js``.
+It is the pure meat behind page rendering, handling Nunjucks template
+rendering, defer block injections, pagination, requests, callbacks, and more.
+
+And to note **the Builder object itself is a promise object** (jQuery
+Deferred-style). It has accepts ``.done()`` and ``.fail()`` handlers. These
+**represent the completion of the page as a whole** (including asynchronous API
+requests via defer blocks). However, the promise methods should not be used
+to set event handlers or modify page content. The ``builder.onload`` callback
+should be used instead which happens when each defer block returns, which
+makes the view more reactive and non-blocking. This will be described more
+below.
+
+In the bare-bones example above, the builder object sets the page title with
+``builder.z('title'...) and sets the page type (a data attribute on the body) with
+``builder.z('type'...)``. Then we call ``builder.start`` to start the build
+process, passing in what template to render and with a context to render it
+with. After some magic, the page will render.
+
+For more details and functionality, below describes the Builder object's API:
+
+.. function:: builder.start(template[, context])
+
+    Starts the build process by rendering a base template to the page.
+
+    :param template: path to the template
+    :param context: object which provides extra context variables to the template
+    :rtype: the Builder object
+
+.. function:: builder.z(key, value)
+
+    Sets app context values. Any values are accepted and are stored in
+    require('z').context. However, certain keys have special behaviors. 'title'
+    sets the window's page title. 'type' sets the body's data-page-type data
+    attribute.
+
+    :param key: name of the context value (e.g., 'title', 'type')
+    :param value: the context value
+    :rtype: the Builder object
+
+.. function:: builder.onload(defer_block_id, handler_function)
+
+    Registers a callback for a defer block matching the defer_block_id.
+    Depending on whether the defer block's URL or data was request-cached or
+    model-cached, it may fire synchronously.
+
+    Given an example defer block ``{% defer (url=api('foo'), id='some-id') %}``,
+    we can register a handler for when data is finished fetching from the 'foo'
+    endpoint like ``builder.onload('some-id', function(endpoint_data) {...``
+
+    :param defer_block_id: ID of the defer block to register the handler to
+    :param handler_function: the handler, which is given the resulting data
+                             from the defer block's API endpoint
+    :rtype: the Builder object
 
 
 .. _defer-block:

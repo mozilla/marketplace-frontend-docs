@@ -7,8 +7,8 @@ This section is about developing, testing, and updating Marketplace Framework
 components such as:
 
 - `Marketplace Core Modules <https://github.com/mozilla/marketplace-core-modules>`_
-- `Marketplace Gulp <https://github.com/mozilla/marketplace-gulp`_.
-- `Commonplace <https://github.com/mozilla/commonplace`_.
+- `Marketplace Gulp <https://github.com/mozilla/marketplace-gulp>`_.
+- `Commonplace <https://github.com/mozilla/commonplace>`_.
 
 We have two types of components: Bower components and Node modules.
 
