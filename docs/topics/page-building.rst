@@ -142,11 +142,10 @@ should be used instead which happens when each defer block returns, which
 makes the view more reactive and non-blocking. This will be described more
 below.
 
-In the bare-bones example above, the builder object sets the page title with
-``builder.z('title'...) and sets the page type (a data attribute on the body) with
-``builder.z('type'...)``. Then we call ``builder.start`` to start the build
-process, passing in what template to render and with a context to render it
-with. After some magic, the page will render.
+In the barebones example above, we set some context variables with ``z``.  Then
+we calls ``builder.start`` to start the build process, passing in the template
+to render and a context to render it with. After some magic, the page will
+render.
 
 For more details and functionality, below describes the Builder object's API:
 
