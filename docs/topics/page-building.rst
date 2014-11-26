@@ -216,16 +216,19 @@ blocks are the magic.
     it into the page.
 
     :param api_url: the API endpoint URL. Use the ``api`` helper and an API
-                    route name to reverse-resolve a URL
+                    route name to reverse-resolve a URL. The response will
+                    be made available as variables ``this`` and ``response``
     :param id: ID of the defer block, used to store API results and fire
-               callbacks on the builder object
+               callbacks on the Builder object (Builder.onload)
     :param pluck: extracts a value from the returned response and reassigns the
                   value to ``this``. Often used to facilitate model caching.
                   The original value of ``this`` is preserved in the variable
                   ``response``.
     :param as: determines which model to cache ``this`` into
-    :param key: pairs with ``as``, determines which field of ``this`` to use
-                as the model key
+    :param key: determines which field of ``this`` to use as key to store the
+                object in the model. Used in conjunction with ``as``
+    :param paginate: selector for the wrapper of paginatable content to enable
+                     continuous pagination
 
 A basic defer block looks like::
 
@@ -238,9 +241,39 @@ A basic defer block looks like::
 In this example, the defer block asynchronously loads the content at
 api('foo').  While waiting for the response, we can show something in the
 meantime with the ``placeholder``. Once it has loaded, the content within the
-defer block is injected into the page's template (by replacing the
-placeholder). ``this`` will then contain the API response returned form the
+defer block is injected into the page's template by replacing the
+placeholder. ``this`` will then contain the API response returned form the
 server.
 
-If two defer blocks use the same API endpoint, the request will only be made
-once in the background.
+Note that if two defer blocks use the same API endpoint, the request will only
+be made once in the background and then cached.
+
+Pagination
+----------
+
+Pagination is done by passing in a selector to the defer block's ``paginate``
+and having an element ``.loadmore button`` inside the defer block. When the
+button is clicked, the defer block will re-run using the button's ``data-url``
+as the API URL. The template is re-rendered with the new (next page) content
+while keeping what was previously within the pagination container. Thus, it
+essentially seem as if the new content was just appended to the pagination
+container. For example:
+
+.. code-block:: javascript
+
+    {% defer (url=api('foo'), paginate='ul.list') %}
+      <ul class="list">
+        {% for result in this %}
+          <li>{{ this.bar }}</li>
+        {% endfor %}
+      </ul>
+      <div class="load_more">
+        <button data-url="{{ api('this.meta.next_page') }}">Load More</button>
+      </div>
+    {% end %}
+
+If pagination fails, a fallback template will be loaded instead as specified
+by ``settings.pagination_error_template``. Note that this is separate behavior
+from the ``{% except %}`` block which renders when an API request errors.
+The error template's context is passed the variable ``more_url``, the URL
+originally requested and failed. This is useful for creating a retry button.
