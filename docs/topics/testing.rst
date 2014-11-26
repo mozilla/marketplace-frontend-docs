@@ -159,6 +159,13 @@ Check out the CasperJS docs and `our existing Fireplace tests
 <https://github.com/mozilla/fireplace/tree/master/tests/ui>`_ for clues on how
 to write end-to-end tests for our frontend projects.
 
+Mocking Login
+-------------
+
+To mock login, run ``require('helpers').fake_login()``. This will, within the
+PhantomJS browser context, set a fake shared-secret token, set user's apps, add
+a login state on the body, and then reload the page.
+
 Executing Code Within the Browser Environment
 ----------------------------------------------
 
@@ -205,6 +212,13 @@ Or you can make a custom
 `waitFor <http://docs.casperjs.org/en/latest/modules/casper.html#waitfor>`_ by
 defining a function that returns true when a custom condition is met.
 
+Viewing Console Logs (Verbose)
+------------------------------
+
+Set the system environment variable, ``SHOW_TEST_CONSOLE``, to see every
+``console.log`` that is sent to the client-side console. This is useful for
+debugging tests.
+
 Tips and Guidelines
 -------------------
 
@@ -213,3 +227,20 @@ Tips and Guidelines
   are updated
 - If ``setUp`` is firing too early, then try running the code within
   ``casper.once('page.initialized', function() {...)``.
+
+
+Continuous Integration (Travis)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+On every commit (on projects that have a ``.travis.yml``), a `Travis
+<https://travis-ci.org/>`_ build is triggered that runs the project's test
+suite (both unit and end-to-end tests). ``.travis.yml`` sets up the continuous
+integration testing process.
+
+For the Marketplace frontend, tests are run using the
+`Marketplace Mock API <http://github.com/mozilla/marketplace-mock-api>`_. A
+specific settings file for is used for Travis, found in
+``tests/settings_travis.js``.
+
+Results of each build are posted to the IRC channel,
+``irc.mozilla.org#amo-bots``.
