@@ -115,6 +115,8 @@ URL which points to the value of the response. For example::
         }
     }
 
+.. _model-caching-intro:
+
 Model Caching
 _____________
 
@@ -128,7 +130,7 @@ The defer block handles this as well, though we need to pass in some parameters
 to its signature. For instance::
 
     {% defer (url='https://marketplace.firefox.com/api/v2/feed/collection/list-of-apps',
-              as='app', key='slug')
+              pluck='apps', as='app', key='slug')
       ...
     {% end %}
 
@@ -136,17 +138,21 @@ This requests an endpoint that returns a list of apps. We tell the defer block
 to *model-cache* these *as* an *app* and *key* them in the cache by their slug
 field. Whereas request caching invokes our requests module, model caching
 invokes our models module (although the models module will call our requests
-module if the model cache hasn't been primed). The model cache might look like::
+module if the model cache hasn't been primed). The model cache might look like:
+
+.. code-block:: json
 
     {
         'apps': {
             'facebook': {
                 'author': 'Facebook',
                 'name': 'Facebook',
+                'slug': 'facebook',
             },
             'twitter': {
                 'author': 'Twitter',
                 'name': 'Twitter',
+                'slug': 'twitter',
                 ...
             }
         }

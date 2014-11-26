@@ -183,11 +183,6 @@ For more details and functionality, below describes the Builder object's API:
                              from the defer block's API endpoint
     :rtype: the Builder object
 
-.. function:: builder.results
-
-    An object containing results from API responses triggered in defer blocks.
-    The results will be keyed by the ID of the defer blocks.
-
 .. function:: builder.terminate()
 
     While the Builder object is often not accessible, if a reference to it
@@ -196,6 +191,11 @@ For more details and functionality, below describes the Builder object's API:
     cleanup. This should never be called from a builder.onload handler.
 
     :rtype: the Builder object
+
+.. attribute:: builder.results
+
+    An object containing results from API responses triggered in defer blocks.
+    The results will be keyed by the ID of the defer blocks.
 
 
 .. _defer-block:
@@ -210,7 +210,7 @@ fragment once finished. We *heavily* recommend reading that section if you have
 not already. As we described the Builder as the meat of the framework, defer
 blocks are the magic.
 
-.. function:: {% defer (api_url[, id[, pluck[, as[, key[, paginate]]]]]) %}
+.. function:: {% defer (api_url[, id[, pluck[, as[, key[, paginate[, nocache]]]]]]) %}
 
     Fetches data from api_url, renders the template in the body, and injects
     it into the page.
@@ -229,6 +229,7 @@ blocks are the magic.
                 object in the model. Used in conjunction with ``as``
     :param paginate: selector for the wrapper of paginatable content to enable
                      continuous pagination
+    :param nocache: will not request-cache the response if enabled
 
 A basic defer block looks like::
 
@@ -245,8 +246,134 @@ defer block is injected into the page's template by replacing the
 placeholder. ``this`` will then contain the API response returned form the
 server.
 
-Note that if two defer blocks use the same API endpoint, the request will only
-be made once in the background and then cached.
+The entire response, unless otherwise specified with ``nocache``, will
+automatically be stored in the request cache. The request cache is an object
+with API endpoints as the key and the responses as the value.  Note that if two
+defer blocks use the same API endpoint, the request will only be made once in
+the background.
+
+{% placeholder %}
+-----------------
+
+Defer blocks are designed with the idea that the base template is rendered
+immediately and content asynchronously loads in over time. This means that some
+placeholder content or loading text is often necessary. The placeholder
+extension to the defer block facilitates this::
+
+    {% defer (url=api('foo')) %}
+      I just loaded {{ this.name }} from the `foo` endpoint.
+    {% placeholder %}
+      This is what you see while the API is working away.
+    {% end %}
+
+Note that placeholder blocks have access to the full context of the page.
+
+{% except %}
+------------
+
+If the request to the server leads to a non-200 response after redirects, an
+``{% except %}`` extension block, if specified, will be rendered instead::
+
+    {% defer (url=api('foo')) %}
+      I just loaded {{ this.name }}.
+    {% except %}
+      {% if error == 404 %}
+        Not found
+      {% elif error == 403 %}
+        Not allowed
+      {% else %}
+        Error
+      {% endif %}
+    {% end %}
+
+The variable ``error`` is defined in the context of the except block. ``error``
+contains the erroring numeric HTTP response code, or a falsey value if there
+was a non-HTTP error. A default except template can be rendered if specified,
+which can be set in ``settings.fragment_error_template``.
+
+{% empty %}
+-----------
+
+If the value of ``this`` (i.e., the plucked value) is an empty list, an
+alternative ``{% empty %}`` extension is rendered. This is useful for lists
+where the amount of content is unknown in advance::
+
+    {% defer (url=api('foo')) %}
+      <ul>
+        {% for result in this %}
+          <li>I just loaded {{ result.slug }}.</li>
+        {% endfor %}
+      </ul>
+    {% empty %}
+      <div class="empty">
+        Nothing was loaded.
+      </div>
+    {% end %}
+
+If ``{% empty %}`` is not defined, the defer block will run with the empty list
+with the current ``this`` variable.
+
+Model Caching
+-------------
+
+In :ref:`model-caching-intro`, we briefly introduced model caching through
+defer blocks. Again, it allows us to cache API responses at an object level
+(e.g., an app from a list of apps) such that they can be retrieved
+individually (e.g., looked up at the app detail page). Here is an example::
+
+    {% defer (url='https://marketplace.firefox.com/api/v2/feed/collection/list-of-apps',
+              pluck='apps', as='app', key='slug')
+      ...
+    {% end %}
+
+The defer block will make a request the endpoint. Consider the API response
+returns::
+
+    {
+        'name': 'List of Apps',
+        'slug': 'list-of-apps',
+        'apps': {
+            'facebook': {
+                'author': 'Facebook',
+                'name': 'Facebook',
+                'slug': 'facebook',
+            },
+            'twitter': {
+                'author': 'Twitter',
+                'name': 'Twitter',
+                'slug': 'twitter',
+            },
+        }
+    }
+
+Let's go over it attribute by attribute:
+
+- ``pluck='apps'``
+    tells the defer block to ``pluck`` the key ``apps`` will
+    reassign the value of ``this`` in the defer block, which would normally
+    contain the whole response, to the value of ``apps`` in the response. This
+    will help isolate what we wish to model cache
+- ``as='app'``
+    store it in the ``app`` model cache. Setting up a model cache
+    will be described in the Caching section
+- ``key='slug'``
+    use the app's ``slug`` field as a key to store in the model
+    cache. Default keys can be configured in the settings which will be
+    described in the Caching section
+
+Once the response comes in, the apps will then automatically be model-cached.
+The ``apps`` model cache may then look like::
+
+    {
+        'facebook': {
+            'author': 'Facebook',
+            'name': 'Facebook',
+        },
+        'twitter': {
+            'author': 'Twitter',
+            'name': 'Twitter',
+        }
+    }
 
 Pagination
 ----------
@@ -257,9 +384,7 @@ button is clicked, the defer block will re-run using the button's ``data-url``
 as the API URL. The template is re-rendered with the new (next page) content
 while keeping what was previously within the pagination container. Thus, it
 essentially seem as if the new content was just appended to the pagination
-container. For example:
-
-.. code-block:: javascript
+container. For example::
 
     {% defer (url=api('foo'), paginate='ul.list') %}
       <ul class="list">
