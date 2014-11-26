@@ -162,6 +162,25 @@ You won't often need these, but here is a list of commands not mentioned above:
 * `gulp templates_build` - compiles Nunjucks templates
 * `node_modules/.bin/commonplace langpacks` - extracts locales into JS modules
 
+Changing API Settings
+_____________________
+
+To conveniently change the API settings (i.e., which server the project points
+to) in ``settings_local.js``, set the environment variable ``API`` to one of
+the server names below::
+
+    prod, dev, stage, altdev, paymentsalt, localhost, mpdev, mock, mocklocal
+
+For example::
+
+    API=prod make serve
+    API=mock make test
+
+This will simply overwrite the ``api_url`` and ``media_url`` in your current
+``settings_local.js``. To view the mappings, check out the
+`Marketplace Node modules config
+<https://github.com/mozilla/commonplace/blob/master/lib/config.js>`_.
+
 
 Bower and RequireJS Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
