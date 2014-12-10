@@ -30,6 +30,7 @@ Pieces that make up the framework include:
 * `Marketplace Gulp <https://github.com/mozilla/marketplace-gulp>`_
 * `Marketplace Node Modules <https://github.com/mozilla/commonplace>`_
 * `Marketplace API Mock <https://github.com/mozilla/marketplace-api-mock>`_
+* `Marketplace Elements <https://github.com/mozilla/marketplace-elements>`_
 
 Contents
 --------
