@@ -66,7 +66,7 @@ To run the webserver on a different port::
 
 To serve with compressed assets (bundled CSS/JS/templates with no RequireJS),
 pass in the `MKT_COMPILED` flag. This is useful for testing in a more
-production-like environment.
+production-like environment::
 
     MKT_COMPILED=1 make serve
 
