@@ -243,6 +243,10 @@ This will be used to generate a `require.js` file that contains an injected
 Our project runs on AMD so understanding `RequireJS configuration
 <http://requirejs.org/docs/api.html#config>`_ is very helpful.
 
+Note that anything you wish to shim must be specified with a valid `exports`.
+If your module doesn't export/expose anything, just set it to `window` or
+something.
+
 Extending the Base Configuration
 ________________________________
 
