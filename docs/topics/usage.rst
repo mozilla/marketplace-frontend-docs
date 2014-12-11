@@ -64,11 +64,11 @@ To run the webserver on a different port::
 
     PORT=8000 make serve
 
-To serve a different template other than `dev.html` (in case you want to test
-the project with bundled CSS/JS), pass in a template name that lives within
-the root of the `src` directory::
+To serve with compressed assets (bundled CSS/JS/templates with no RequireJS),
+pass in the `MKT_COMPILED` flag. This is useful for testing in a more
+production-like environment.
 
-    TEMPLATE=app make serve
+    MKT_COMPILED=1 make serve
 
 The webserver will also launch a LiveReload server for CSS modifications. When
 CSS is recompiled, the browser sessions will automatically refresh their
