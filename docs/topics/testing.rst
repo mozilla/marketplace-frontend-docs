@@ -12,6 +12,10 @@ can do so by setting in your local settings::
     api_url: 'https://flue.paas.allizom.org',
     media_url: 'https://flue.paas.allizom.org'
 
+Expect to have to modify the Marketplace API Mock when writing tests for new
+features. When doing so, try to keep the responses predictable rather than
+random as to not introduce flakiness into our tests.
+
 When modifying a module that has defined input and output, write a unit test.
 When modifying the UI or something that affects multiple pages and URLs, then
 write an end-to-end test.
@@ -99,15 +103,16 @@ End-to-End Tests
 ~~~~~~~~~~~~~~~~
 
 We use `CasperJS <http://casperjs.readthedocs.org/en/latest/>`_
-(*v1.1.0-beta3*) to write ouj end-to-end, or integration, tests. These tests
-live in the ``tests`` directory. This directory comprises of:
+(*v1.1.0-beta3*) to write our end-to-end, or integration, tests. These
+Node-based tests live in the ``tests`` directory. This directory comprises of:
 
 - ``captures`` - contains screenshots taken whenever a test fails
-- ``helpers.js`` - helps power our tests on top of casperjs. contains various
-  assertion facilities, utilities, and sets up necessary callbacks.
+- ``lib/constants.js`` - holds reusable constants
+- ``lib/helpers.js`` - helps power our tests on top of CasperJS. contains
+  various assertion facilities, utilities, and sets up necessary callbacks.
 - ``settings_travis.js`` - contains test settings and is copied into the
   project directory during Travis tests (in .travis.yml)
-- ``ui`` - holds the actual tests
+- ``ui`` - holds the actual test suites
 
 CasperJS spins up PhantomJS, a headless browser, and runs the tests. The tests
 *usually* consist of telling CasperJS what to click and then asserting that a
@@ -116,7 +121,6 @@ selector is visible. An example test:
 .. code-block:: javascript
 
   var helpers = require('../helpers');
-  helpers.startCasper({path: '/some/path'});
 
   casper.test.begin('Test Some Selector', {
       setUp: function() {
@@ -128,6 +132,8 @@ selector is visible. An example test:
       },
 
       test: function(test) {
+          helpers.startCasper({path: '/some/path'});
+
           casper.waitForSelector('#splash-overlay.hide', function() {
               // Run an assertion.
               test.assertVisible('.some-selector',
@@ -146,11 +152,13 @@ selector is visible. An example test:
       },
   });
 
-We require ``helpers``, which contains some boilerplate such as for
+We require ``helpers``, which contains useful boilerplate such as for
 initializing CasperJS. We pass a path to ``startCasper`` which the page
-CasperJS will tell PhantomJS to initially load. We begin a test, named *Test
-Some Selector*, which takes an object. The ``test`` function is injected with
-the `CasperJS test module
+CasperJS will tell PhantomJS to initially load. Try to use ``startCasper``
+within the ``test function`` as to keep the Casper environment isolated.
+
+We begin a test, named *Test Some Selector*, which takes an object. The
+``test`` function is injected with the `CasperJS test module
 <http://docs.casperjs.org/en/latest/modules/tester.html>`_ which contains
 assertion facilities and callbacks. Then we run the test, but make sure that
 the ``test.done()`` callback is invoked at the end.
@@ -159,12 +167,28 @@ Check out the CasperJS docs and `our existing Fireplace tests
 <https://github.com/mozilla/fireplace/tree/master/tests/ui>`_ for clues on how
 to write end-to-end tests for our frontend projects.
 
+Debugging Tests
+---------------
+
+Some useful tips when debugging a failing test:
+
+- Whenever a test fails, CasperJS will automatically take a screenshot using
+PhantomJS. The screenshot is stored in the ``tests/captures`` directory. Check
+it out to see what the page looked like when an assertion fails.
+- If the failing test is related to a ``waitFor``, try increasing the timeout
+of the ``waitFor`` by passing the timeout in milliseconds as the third argument
+to the ``waitFor`` (where the first argument is the callback, and the second is
+the timeout callback). The default timeout is 5000ms.
+
 Mocking Login
 -------------
 
 To mock login, run ``require('helpers').fake_login()``. This will, within the
 PhantomJS browser context, set a fake shared-secret token, set user's apps, add
 a login state on the body, and then reload the page.
+
+Reloading the page takes a bit of time. Most likely, you will have to increase
+the timeout of the subsequent ``waitFor`` to at least 8 seconds.
 
 Executing Code Within the Browser Environment
 ----------------------------------------------
@@ -222,7 +246,14 @@ debugging tests.
 Tips and Guidelines
 -------------------
 
-- If you write something that is reusable, consider adding it to ``helpers.js``
+- If you write something reusable, consider adding it to ``helpers.js``
+- If you use a constant, consider adding it to ``constants.js``
+- If you are testing common functionality across multiple pages, give it its
+  own test suite and loop a test suite over multiple pages...rather than
+  rewriting a test across multiple test suites.
+- Try to keep selectors short, but concise. We don't want tests to break
+  often as we move around and change elements. One-class-name selectors are
+  usually preferred.
 - Try to avoid specific string checking as the test may break if strings
   are updated
 - If ``setUp`` is firing too early, then try running the code within
