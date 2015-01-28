@@ -229,8 +229,8 @@ Debugging Tests
 
 Some useful tips when debugging a failing test:
 
-- Set the system environment variable, ``SHOW_TEST_CONSOLE``, to see every
-``console.log`` that is sent to the client-side console. This is useful for
+- Set the system environment variable, ``SHOW_TEST_CONSOLE``, to see every ``console.log``
+that is sent to the client-side console. This is useful for
 debugging tests.
 - Whenever a test fails, CasperJS will automatically take a screenshot using
 PhantomJS. The screenshot is stored in the ``tests/captures`` directory. Check
