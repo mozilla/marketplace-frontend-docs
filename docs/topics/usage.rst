@@ -254,3 +254,9 @@ The base Commonplace configuration can be extended within frontend projects
 in `config.js`. It will become straightforward once you check out the file. We
 extend the base configuration usually if we want to add a module or component
 that only matters one of the several Marketplace frontend projects.
+
+
+Packaged App
+~~~~~~~~~~~~
+
+Read about `Packaged Apps in the top-level documentation <https://marketplace.readthedocs.org/en/latest/topics/packaged-apps.html>`_.
