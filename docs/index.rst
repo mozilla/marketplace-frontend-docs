@@ -47,3 +47,4 @@ Contents
    topics/caching.rst
    topics/module-api.rst
    topics/testing.rst
+   topics/guidelines.rst
