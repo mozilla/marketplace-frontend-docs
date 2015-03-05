@@ -68,37 +68,33 @@ A basic unit test may look like:
 
 .. code-block:: javascript
 
-    test('someModule.someFunction', function(done, fail) {
-        mock('someModule', {
-            'someModuleToMock': {
-                mockKey: mockValue
-            }
-        }, function(someModule) {
-            eq_(someModule.someFunction(), 'My Expected Value');
-            someModule.someOtherFunction().fail(fail);
-            done();
-        }, fail);
+    define('tests/unit/some-module', ['tests/unit/helpers'], function(h) {
+        describe('someModule.someFunction', function() {
+            it('gives the expected value',
+                h.injector()
+                .mock('someModuleToMock', {mockKey: mockValue})
+                .run(['someModule'], function(someModule) {
+                    assert.equal(someModule.someFunction(),
+                                 'My Expected Value');
+                }));
+        });
     });
 
 Important things to note:
 
-- ``test`` is a function defined in ``marketplace-core-modules/views/tests.js``
-  as ``window.test``. It takes the name of the test. Then it injects a done and
-  fail callback, which should be invoked on test finish and test failure. It
-  has behavior to update the ran/pass/fail counts.
-- ``mock`` is a function defined in ``marketplace-core-modules/assert.js``. It
-  takes the name of the module being tested, and then an object containing
-  the mocks. With the object's keys being the name of a module to mock, and
-  the value being another object what to mock within the module. This is all
-  done using RequireJS contexts. Each time mock is called, a unique RequireJS
-  context is generated that uses the ``map`` config of the RequireJS config. It
-  then stubs (not extends) the modules with what you pass in as the mock.
-- The function that comes after the mock is injected with the module being
-  tested. You can make assertions and raise failures in this function. At the
-  end, make sure to call the ``done`` callback.
-- The last argument is the ``fail`` callback
-
-Check out the ``assert.js`` module to see the testing API.
+- ``describe`` and ``it`` come from `Mocha`_. When the tests run the strings
+  passed to ``describe`` and ``it`` will be combined to describe the test in
+  the output. This test will be called "someModule.someFunction gives the
+  expected result".
+- ``h.injector()`` is a shorthand for ``new Squire()``. It also takes a
+  variable number of functions as arguments to intialize the mocking. These
+  functions should accept the injector and call its ``mock`` method. There are some
+  helpers included in ``tests/unit/helpers.js``, such as ``mockSettings`` which
+  can be used as: ``h.injector(h.mockSettings({mySetting: 'foo'}))``.
+- Calling ``run`` on the injector will automatically end the test for synchronous
+  code. If you have asynchronous code you will need to use ``require`` instead and
+  call Mocha's ``done()`` function when complete.
+- See the `Squire`_ page for documentation on how to use Squire.
 
 
 End-to-End Tests
