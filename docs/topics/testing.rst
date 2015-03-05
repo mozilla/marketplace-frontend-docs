@@ -3,7 +3,7 @@ Testing
 
 Marketplace frontend projects have both unit tests and end-to-end tests. These
 tests help catch regressions, validate user flow, and add confidence the
-codebase. When adding feature, try to look to cover it with test.
+codebase. When adding a feature, try to look to cover it with tests.
 
 Our tests expect that you use the
 `Marketplace API Mock <https://github.com/mozilla/marketplace-api-mock>`_. You
@@ -25,17 +25,23 @@ Unit Tests
 
 Unit tests live in:
 
-- ``<frontend-project>/src/tests`` for frontend projects
+- ``<frontend-project>/tests/unit`` for frontend projects
 - ``marketplace-core-modules/tests`` for Marketplace Core Modules
 
-To run unit tests, simply navigate to::
+To run the unit tests once::
 
-    http://localhost:xxxx/tests
+    make unittest
 
-where xxxx is the port the project is being served from with ``make serve``.
-You *could* also run it on the command line with ``node_modules/.bin/casperjs
-test tests/ui/unittests.js``, but it's not very descriptive in telling what
-passes and what fails.
+To continuosly run unit tests when files change::
+
+    make unittest-watch
+
+Troubleshooting
+---------------
+
+If you encounter an error where the ``karma`` command cannot be found try
+running ``rm -rf node_modules && npm install`` to get a fresh copy of the
+node dependencies.
 
 How They Work
 -------------
