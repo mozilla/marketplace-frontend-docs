@@ -47,23 +47,19 @@ How They Work
 -------------
 
 The unit tests are powered by RequireJS, in terms of being able to "import"
-modules and unit test their interfaces. They also use helpers and utilities
-from ``assert.js`` and ``views/tests.js``, both of which live in Marketplace
-Core Modules. These helpers include allowing us to *mock* modules using
-RequireJS contexts.
+modules and unit test their interfaces. The tests use the following libraries:
 
-The test page (at ``/tests``) includes all of the unit tests as script tags for
-them to be run all at once. The base test page is sourced from our
-`core templates <https://github.com/mozilla/commonplace/tree/master/dist/core-templates>`_,
-which is copied into ``src/templates/commonplace/tests.html``. The base test
-page includes unit tests for Marketplace Core Modules. Then that page is
-extended in ``src/templates/tests.html`` to include unit tests for modules
-specific to the frontend project.
+* `Mocha`_ for defining tests.
+* `Chai`_ for assertions.
+* `Sinon`_ for mocks, stubs and spies.
+* `Squire`_ for managing RequireJS.
+* `Karma`_ to run the tests in a real browser.
 
-The test page keeps track of how many tests finish running, how many tests
-pass, and how many tests fail. These numbers are stored in a DOM element
-which is actually used by Travis (via CasperJS) to determine whether the unit
-tests pass in continuous integration.
+.. _Mocha: http://mochajs.org/
+.. _Chai: http://chaijs.com/
+.. _Sinon: http://sinonjs.org/
+.. _Squire: https://github.com/iammerrick/Squire.js/
+.. _Karma: http://karma-runner.github.io/
 
 Writing a Unit Test
 -------------------
