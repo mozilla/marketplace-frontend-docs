@@ -118,8 +118,6 @@ selector is visible. An example test:
 
 .. code-block:: javascript
 
-  var helpers = require('../helpers');
-
   casper.test.begin('Test Some Selector', {
       setUp: function() {
         // Setup ran before the test.
@@ -148,7 +146,7 @@ selector is visible. An example test:
       },
   });
 
-We require ``helpers``, which contains useful boilerplate such as for
+``helpers`` is always available and contains useful boilerplate such as for
 initializing CasperJS. We pass a path to ``startCasper`` which the page
 CasperJS will tell PhantomJS to initially load. Try to use ``startCasper``
 within the ``test function`` as to keep the Casper environment isolated.
@@ -166,13 +164,13 @@ to write end-to-end tests for our frontend projects.
 Mocking Login
 -------------
 
-To mock login, run ``require('helpers').fake_login()``. This will, within the
+To mock login, run ``helpers.fake_login()``. This will, within the
 PhantomJS browser context, set a fake shared-secret token, set user's apps and
 settings, add a login state on the body, and then asynchronously reload the
 page.
 
 Usually, you will run ``fake_login()`` and then immediately use a
-``require('helpers.waitForPageLoaded')`` to wait for the ``fake_login()``
+``helpers.waitForPageLoaded()`` to wait for the ``fake_login()``
 to reload the page.
 
 Executing Code Within the Browser Environment
