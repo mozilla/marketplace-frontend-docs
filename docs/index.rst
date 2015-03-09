@@ -10,6 +10,7 @@ Related Documentation
 
 * `Firefox Marketplace high-level documentation <https://marketplace.readthedocs.org>`_
 * `Firefox Marketplace API documentation <https://firefox-marketplace-api.readthedocs.org>`_
+* `Old Commonplace Wiki <https://github.com/mozilla/commonplace/wiki>`_
 
 Frontend Projects and Components
 --------------------------------
