@@ -110,9 +110,42 @@ live in the ``tests`` directory. This directory comprises of:
   various assertion facilities, utilities, and sets up necessary callbacks.
 - ``ui`` holds the actual test suites.
 
-CasperJS spins up PhantomJS or SlimerJS to run the tests. The tests *usually*
-consist of telling CasperJS what to click and then asserting that a selector
-is visible. An example test:
+CasperJS spins up PhantomJS or SlimerJS to run the tests.
+
+To run the suite with PhantomJS::
+
+    make uitest-phantom
+
+To run the suite with SlimerJS::
+
+    make uitest-slimer
+
+SlimerJS runs against an external Firefox binary. By default the tests will try
+to use a Firefox installed to ``/Applications/Firefox.app/Contents/MacOS/firefox``.
+This will only work on Mac and will use whatever version of Firefox you have
+installed there. For best results it is suggested to use Firefox 30 which can be
+downloaded from `ftp.mozilla.org
+<http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/30.0/>`_. You can set
+the version of Firefox to use with ``SLIMERJSLAUNCHER``, you may want to include
+``export SLIMERJSLAUNCHER=/path/to/firefox`` in your shell's setup script.
+
+.. code-block:: bash
+
+    SLIMERJSLAUNCHER=/Applications/Firefox-30.app/Contenst/MacOS/firefox make uitest-slimer
+
+To run PhantomJS followed by SlimerJS use::
+
+    make uitest
+
+You can run a single test file with the ``UITEST_FILE`` environment variable::
+
+    UITEST_FILE=tests/ui/search.js make uitest-slimer
+
+Writing an End-to-End Test
+--------------------------
+
+The tests *usually* consist of telling CasperJS what to click and then asserting
+that a selector is visible. An example test:
 
 .. code-block:: javascript
 
