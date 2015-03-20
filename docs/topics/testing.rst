@@ -249,7 +249,7 @@ integration testing process.
 For the Marketplace frontend, tests are run using the
 `Marketplace Mock API <http://github.com/mozilla/marketplace-mock-api>`_. A
 specific settings file for is used for Travis, found in
-``tests/settings_travis.js``.
+``src/media/js/settings_local_test.js``.
 
 Results of each build are posted to the IRC channel,
 ``irc.mozilla.org#amo-bots``.
