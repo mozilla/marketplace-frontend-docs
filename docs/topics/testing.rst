@@ -110,36 +110,29 @@ live in the ``tests`` directory. This directory comprises of:
   various assertion facilities, utilities, and sets up necessary callbacks.
 - ``ui`` holds the actual test suites.
 
-CasperJS spins up PhantomJS or SlimerJS to run the tests.
+If you wish to run end-to-end tests with just one of the browser targets, you
+can run ``make uitest-phantom`` or ``make uitest-slimer``. To run end-to-tests
+targetting both PhantomJS and SlimerJS, run::
 
-To run the suite with PhantomJS::
+    make uitest
 
-    make uitest-phantom
+You can run a single test file or folder by setting ``UITEST_FILE`` environment
+variable::
 
-To run the suite with SlimerJS::
-
-    make uitest-slimer
+    UITEST_FILE=tests/ui/search.js make uitest-slimer
 
 SlimerJS runs against an external Firefox binary. By default the tests will try
-to use a Firefox installed to ``/Applications/Firefox.app/Contents/MacOS/firefox``.
-This will only work on Mac and will use whatever version of Firefox you have
-installed there. For best results it is suggested to use Firefox 30 which can be
-downloaded from `ftp.mozilla.org
-<http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/30.0/>`_. You can set
-the version of Firefox to use with ``SLIMERJSLAUNCHER``, you may want to include
-``export SLIMERJSLAUNCHER=/path/to/firefox`` in your shell's setup script.
+to use ``/Applications/Firefox.app/Contents/MacOS/firefox``.
+This only works on Mac and uses the installed version of Firefox.
+We recommended downloading and running tests with
+`Firefox 30 <http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/30.0/>`_.
+You can then set the version of Firefox to use with ``SLIMERJSLAUNCHER``. For
+convenience, include ``export SLIMERJSLAUNCHER=/path/to/firefox`` in your
+shell's setup script.
 
 .. code-block:: bash
 
     SLIMERJSLAUNCHER=/Applications/Firefox-30.app/Contenst/MacOS/firefox make uitest-slimer
-
-To run PhantomJS followed by SlimerJS use::
-
-    make uitest
-
-You can run a single test file with the ``UITEST_FILE`` environment variable::
-
-    UITEST_FILE=tests/ui/search.js make uitest-slimer
 
 Writing an End-to-End Test
 --------------------------
@@ -248,9 +241,13 @@ Debugging Tests
 
 Some useful tips when debugging a failing test:
 
-- Set the system environment variable, ``SHOW_TEST_CONSOLE``, to see every ``console.log``
-that is sent to the client-side console. This is useful for
+- Set the system environment variable, ``SHOW_TEST_CONSOLE``, to see every
+``console.log`` that is sent to the client-side console. This is useful for
 debugging tests.
+- Set the environment varible, ``FILTER_TEST_CONSOLE``, along with
+``SHOW_TEST_CONSOLE`` to see only logs that start with whatever is passed to
+``FILTER_TEST_CONSOLE``. Often, you can console.log ``[debug]`` in a
+casper.evaluate context and filter on that to poke around.
 - Whenever a test fails, CasperJS will automatically take a screenshot using
 PhantomJS. The screenshot is stored in the ``tests/captures`` directory. Check
 it out to see what the page looked like when an assertion fails.

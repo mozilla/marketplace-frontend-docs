@@ -58,8 +58,8 @@ We make heavy use of AMD modules in the frontend.
 - Docstring at the top of all modules that describes the module.
 - The `define` line, the dependency list, and the function signature all begin
 on separate lines.
-- Alphabetize dependencies in module definitions based on the name of the
-dependency module.
+- Generally, alphabetize dependencies in module definitions based on the name
+of the dependency module.
 - Keep with 80-chars. When a dependency list grows too long, line-break it
 and use a visual-based indent.
 - If there is a line break in the dependency list, match the line break in
@@ -111,3 +111,5 @@ Some additional guidelines:
   middle.
 - Prefix Stylus classes by page or component (e.g., :code:`.big-dropdown-label`
   rather than just :code:`.label`).
+- Try to contain as much view logic in JS as you can rather than Nunjucks
+  templates. Nunjucks templates usually generate more code than JS.

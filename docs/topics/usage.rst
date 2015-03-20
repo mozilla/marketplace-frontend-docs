@@ -62,7 +62,7 @@ and recompile anything if necessary. Here is what the webserver watches for:
 
 To run the webserver on a different port::
 
-    PORT=8000 make serve
+    MKT_PORT=8000 make serve
 
 To serve with compressed assets (bundled CSS/JS/templates with no RequireJS),
 pass in the `MKT_COMPILED` flag. This is useful for testing in a more
@@ -75,6 +75,12 @@ CSS is recompiled, the browser sessions will automatically refresh their
 CSS stylesheets live without a page refresh. To disable LiveReload::
 
     NO_LIVERELOAD=1 make serve
+
+The webserver will rewrite ``src/media/js/lib/marketplace-core-modules`` to the
+``bower_components`` directory such that the modules don't need to be copied
+into the project. Our build tools at ``marketplace-gulp`` will be able to
+find the JS modules in the ``bower_components`` directory. We plan on doing
+this with our other JS dependencies.
 
 Generated index.html
 ____________________
@@ -136,11 +142,11 @@ Other things that will be generated:
 
 If you want to test the project with the built bundles above, serve with a
 template that uses the bundle, such as `src/app.html`. Read about the webserver
-above for more details
+above for more details.
 
 If you want to disable uglification and minification of JS and CSS::
 
-    NO_MINIFY=1 make build
+    MKT_NO_MINIFY=1 make build
 
 
 Additional Command-Line Interface

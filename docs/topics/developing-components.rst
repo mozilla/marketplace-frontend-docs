@@ -16,32 +16,34 @@ Bower Components
 ~~~~~~~~~~~~~~~~
 
 Bower is the package manager we use for frontend assets. The assets are
-downloaded to ``bower_components`` and copied into the project with ``make
-install``.
+downloaded to ``bower_components`` and most are currently copied into the
+project with ``make install``.
 
 Development and Testing Workflow
 --------------------------------
 
-For convenience, you can ``git clone`` components straight into the source of
-your frontend project to where it would normally be copied to. That way, you
-can test your modules and handle revisions in the same place (without needing
-to copy modules to a different folder to commit).
+Currently for ``marketplace-core-modules``, you can ``bower link`` from your
+``marketplace-core-modules`` project. And then in your frontend project, you
+can ``bower link marketplace-core-modules`` to set up symlinks. Our webserver
+will rewrite the paths to ``bower_components`` such that development can be
+done directly within ``marketplace-core-modules``. We plan on adding the
+webserver-rewriting functionality for other components.
 
-For example, you can git clone ``marketplace-core-modules`` straight to
-``src/media/js/lib``, and develop and test the modules there.
-
-Be careful as running ``make install`` may overwrite changes you make in that
-directory, which will copy the source files from bower_components over to the
-project directory.
+For most other Bower components, they are copied into JS and CSS ``lib``
+directories into the source tree where the project can locate them and then
+gitignored. You can employ some strategies for developing these such as setting
+up symlinks. We are sorry for this.
 
 Updating a Component
 --------------------
 
 When pushing an update for a component:
 
-- Bump the version in ``bower.json`` (e.g., *1.5.2* to *1.5.3*)
-- Git tag the version (e.g., ``git tag v1.5.3``)
-- Push to Github (i.e., ``git push origin v1.5.3 && git push origin master``)
+- Bump the version in ``bower.json`` (e.g., *1.5.2* to *1.6.0*), following
+  semver
+- Commit the patch and push (e.g., ``git commit -m v1.6.0 important bug fix``)
+- Git tag the version (e.g., ``git tag v1.6.0``)
+- Push to Github (i.e., ``git push origin v1.6.0 && git push origin master``)
 
 To **consume** the updated component from a frontend project:
 
@@ -60,24 +62,29 @@ We have node modules such as Commonplace and Marketplace Gulp.
 Development and Testing Workflow
 --------------------------------
 
-When developing a node module, it is annoying to have to continually rebuild
-it or copy files back and forth between a version-tracked directory.
-``npm link`` eases this:
+When developing a node module, it is annoying to have to continually rebuild it
+or copy files back and forth between a version-tracked directory.  ``npm link``
+eases this:
 
-- Go to the project directory of the node module you are developing (e.g., marketplace-gulp)
+- Go to the project directory of the node module you are developing
+  (e.g., marketplace-gulp)
 - Run ``npm link`` to create a global link
-- Go to the project directory of the frontend project you want test it with (e.g., fireplace)
+- Go to the project directory of the frontend project you want test it with
+  (e.g., fireplace)
 - Run ``npm link <PACKAGE_NAME>`` to link-install the package
 
 Then changes are made in the node module's project directory will be reflected
 within the frontend project it is being tested with.
+
+Currently, ``marketplace-gulp`` has issues with this since Gulp does not play
+well with ``npm link`` when requiring other Gulpfiles.
 
 Updating a Module
 -----------------
 
 When pushing an update for a module:
 
-- Bump the version in ``package.json`` (e.g., *1.5.2* to *1.5.3*)
+- Bump the version in ``package.json`` (e.g., *1.5.2* to *1.6.0*)
 - Commit and push to Github (i.e., ``git push origin master``)
 - Run ``npm publish`` to publish it to npm
 
@@ -94,7 +101,6 @@ Guidelines
 
 When updating a module:
 
-- Bump the ``bower.json`` or ``package.json`` in the same commit
+- Try to bump the ``bower.json`` or ``package.json`` in the same commit
 - Prepend the commit message with the version (e.g., *v1.5.3 updated logs*)
-
-Then proceed as described above.
+- Use `semver's Semantic Versioning <http://semver.org/>`_

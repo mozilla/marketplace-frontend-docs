@@ -24,6 +24,7 @@ include:
 * `Marketplace Communication Dashboard <https://github.com/mozilla/commbadge>`_
 * `Marketplace Operator Dashboard <https://github.com/mozilla/marketplace-operator-dashboard>`_
 * `Marketplace Statistics <https://github.com/mozilla/marketplace-stats>`_
+* `Marketplace Style Guide <https://github.com/mozilla/marketplace-style-guide>`_
 
 Pieces that make up the framework include:
 
@@ -32,6 +33,7 @@ Pieces that make up the framework include:
 * `Marketplace Node Modules <https://github.com/mozilla/commonplace>`_
 * `Marketplace API Mock <https://github.com/mozilla/marketplace-api-mock>`_
 * `Marketplace Elements <https://github.com/mozilla/marketplace-elements>`_
+* `Marketplace jQuery <https://github.com/mozilla/marketplace-jquery>`_
 
 Contents
 --------
