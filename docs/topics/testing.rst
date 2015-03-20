@@ -101,32 +101,22 @@ End-to-End Tests
 ~~~~~~~~~~~~~~~~
 
 We use `CasperJS <http://casperjs.readthedocs.org/en/latest/>`_
-(*v1.1.0-beta3*) to write our end-to-end, or integration, tests. These
-Node-based tests live in the ``tests`` directory. This directory comprises of:
+(*v1.1.0-beta3*) to write our end-to-end, or integration, tests. These tests
+live in the ``tests`` directory. This directory comprises of:
 
-- ``captures`` - contains screenshots taken whenever a test fails
-- ``lib/constants.js`` - holds reusable constants
-- ``lib/helpers.js`` - helps power our tests on top of CasperJS. contains
+- ``captures`` contains screenshots taken whenever a test fails.
+- ``lib/constants.js`` holds reusable constants.
+- ``lib/helpers.js`` helps power our tests on top of CasperJS. Contains
   various assertion facilities, utilities, and sets up necessary callbacks.
-- ``settings_travis.js`` - contains test settings and is copied into the
-  project directory during Travis tests (in .travis.yml)
-- ``ui`` - holds the actual test suites
+- ``ui`` holds the actual test suites.
 
-CasperJS spins up PhantomJS, a headless browser, and runs the tests. The tests
-*usually* consist of telling CasperJS what to click and then asserting that a
-selector is visible. An example test:
+CasperJS spins up PhantomJS or SlimerJS to run the tests. The tests *usually*
+consist of telling CasperJS what to click and then asserting that a selector
+is visible. An example test:
 
 .. code-block:: javascript
 
   casper.test.begin('Test Some Selector', {
-      setUp: function() {
-        // Setup ran before the test.
-      },
-
-      tearDown: function() {
-        // Teardown ran after the test.
-      },
-
       test: function(test) {
           helpers.startCasper({path: '/some/path'});
 
@@ -146,16 +136,16 @@ selector is visible. An example test:
       },
   });
 
-``helpers`` is always available and contains useful boilerplate such as for
-initializing CasperJS. We pass a path to ``startCasper`` which the page
-CasperJS will tell PhantomJS to initially load. Try to use ``startCasper``
-within the ``test function`` as to keep the Casper environment isolated.
+``helpers`` is always available and contains useful boilerplate such as
+initializing CasperJS. We pass a path to ``startCasper`` which CasperJS
+will tell the browser to initially load. Try to use ``startCasper``
+within the ``test function`` to keep the Casper environment isolated.
 
 We begin a test, named *Test Some Selector*, which takes an object. The
 ``test`` function is injected with the `CasperJS test module
 <http://docs.casperjs.org/en/latest/modules/tester.html>`_ which contains
 assertion facilities and callbacks. Then we run the test, but make sure that
-the ``test.done()`` callback is invoked at the end.
+the ``helpers.done(test)`` callback is invoked at the end.
 
 Check out the CasperJS docs and `our existing Fireplace tests
 <https://github.com/mozilla/fireplace/tree/master/tests/ui>`_ for clues on how
