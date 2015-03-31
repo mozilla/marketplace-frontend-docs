@@ -76,8 +76,11 @@ eases this:
 Then changes are made in the node module's project directory will be reflected
 within the frontend project it is being tested with.
 
-Currently, ``marketplace-gulp`` has issues with this since Gulp does not play
-well with ``npm link`` when requiring other Gulpfiles.
+When doing ``npm link`` for marketplace-gulp, make sure your project's gulpfile
+looks similar to this `reference gulpfile
+<https://github.com/mozilla/marketplace-template/blob/master/gulpfile.js>`_. We
+require tasks exposed by marketplace-gulp, and attach it to the local Gulp
+object. This is a workaround for issues with ``npm link`` and Gulp.
 
 Updating a Module
 -----------------
