@@ -17,8 +17,7 @@ Setting up an instance of the Marketplace frontend for development is very
 simple. For this example, we'll check out
 `Fireplace <https://github.com/mozilla/fireplace>`_::
 
-    git clone git@github.com:mozilla/fireplace
-    npm install
+    git clone git@github.com:mozilla/fireplace && cd fireplace
     make install
     make serve
 
