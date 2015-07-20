@@ -22,12 +22,18 @@ project with ``make install``.
 Development and Testing Workflow
 --------------------------------
 
-Currently for ``marketplace-core-modules``, you can ``bower link`` from your
-``marketplace-core-modules`` project. And then in your frontend project, you
-can ``bower link marketplace-core-modules`` to set up symlinks. Our webserver
-will rewrite the paths to ``bower_components`` such that development can be
-done directly within ``marketplace-core-modules``. We plan on adding the
-webserver-rewriting functionality for other components.
+To develop changes for ``marketplace-core-module`` first checkout a
+local copy using ``git clone``. Once you have the code you can ``cd``
+into the folder and run ``bower link``. ``bower`` will now know that
+this is your local copy of ``marketplace-core-modules``. To use your
+local copy in a frontend project like ``fireplace`` you can run
+``bower link marketplace-core-modules`` in the frontend project's
+directory to tell ``bower`` to use your local copy. If you are not
+making local changes to ``marketplace-core-modules`` then you should
+not use a local copy to ensure that you are up to date. To stop
+using your local copy simply uninstall it with
+``bower uninstall marketplace-core-modules`` and then run
+``make install`` to get the latest version.
 
 For most other Bower components, they are copied into JS and CSS ``lib``
 directories into the source tree where the project can locate them and then
