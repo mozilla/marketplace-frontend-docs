@@ -24,9 +24,10 @@ Development and Testing Workflow
 
 To develop changes for ``marketplace-core-module`` first checkout a
 local copy using ``git clone``. Once you have the code you can ``cd``
-into the folder and run ``bower link``. ``bower`` will now know that
-this is your local copy of ``marketplace-core-modules``. To use your
-local copy in a frontend project like ``fireplace`` you can run
+into the folder and run ``bower link`` (see the `bower docs`_ for
+more information). ``bower`` will now know that this is your local
+copy of ``marketplace-core-modules``. To use your local copy in a
+frontend project like ``fireplace`` you can run
 ``bower link marketplace-core-modules`` in the frontend project's
 directory to tell ``bower`` to use your local copy. If you are not
 making local changes to ``marketplace-core-modules`` then you should
@@ -39,6 +40,8 @@ For most other Bower components, they are copied into JS and CSS ``lib``
 directories into the source tree where the project can locate them and then
 gitignored. You can employ some strategies for developing these such as setting
 up symlinks. We are sorry for this.
+
+.. _bower docs: http://bower.io/docs/api/#link
 
 Updating a Component
 --------------------
