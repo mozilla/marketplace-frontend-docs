@@ -6,7 +6,7 @@ Developer documentation for Firefox Marketplace frontend projects. Hosted at
 Other Marketplace documentation repositories include:
 
 - [Marketplace high-level documentation](https://github.com/mozilla/marketplace-docs).
-- [Marketplace API documentation](https://github.com/mozilla/zamboni/tree/docs/api).
+- [Marketplace API documentation](https://github.com/mozilla/zamboni/tree/master/docs/api).
 
 
 Marketplace frontend projects include:
